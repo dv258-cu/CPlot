@@ -1,0 +1,35 @@
+cmake_minimum_required(VERSION 3.16)
+project(CPlot C)
+
+# 1. SDL3 Configuration
+set(SDL_SHARED ON CACHE BOOL "" FORCE)
+set(SDL_STATIC OFF CACHE BOOL "" FORCE)
+set(SDL_TEST OFF CACHE BOOL "" FORCE)
+
+# 2. SDL_ttf Configuration: Tell it to use the dependencies we just installed
+set(SDL3TTF_HARFBUZZ ON CACHE BOOL "" FORCE)
+
+# 3. Add directories
+add_subdirectory(deps/SDL)
+add_subdirectory(deps/SDL_ttf)
+
+# 4. Define executable
+add_executable(${PROJECT_NAME} src/main.c src/cplot.c)
+
+# 5. Link Libraries
+# Adding SDL3::SDL3_test fixes the "undefined reference to SDL_main" error
+target_link_libraries(${PROJECT_NAME} PRIVATE 
+    SDL3::SDL3-shared 
+    SDL3::SDL3_test
+    SDL3_ttf::SDL3_ttf-shared
+)
+
+# 6. Windows DLL Copy
+if(WIN32)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:SDL3::SDL3-shared>
+        $<TARGET_FILE:SDL3_ttf::SDL3_ttf-shared>
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>
+    )
+endif()
