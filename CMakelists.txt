@@ -14,7 +14,7 @@ add_subdirectory(deps/SDL)
 add_subdirectory(deps/SDL_ttf)
 
 # 4. Define executable
-add_executable(${PROJECT_NAME} src/main.c src/cplot.c)
+add_executable(${PROJECT_NAME} src/main.c src/cplot.c src/cpfunc.c)
 
 # 5. Link Libraries
 # Adding SDL3::SDL3_test fixes the "undefined reference to SDL_main" error
