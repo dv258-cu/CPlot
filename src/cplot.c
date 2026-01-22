@@ -8,6 +8,8 @@
 #include "cplot.h"
 #include "cpfunc.h"
 
+/// Internal Support Functions /////////////////////////////////////////////////////////////
+
 
 // Takes the window dimensions to transform horizontal axis values to actual graph values
 int Graph2Window_X(int x) {
@@ -25,6 +27,10 @@ float CP_GetHorizontalResolution(RenderContext* ctx, int x_length) {
 
     return (float)plot_width / x_length;
 }
+
+
+/// Rendering Functions ///////////////////////////////////////////////////////////////////
+
 // Renders the horizontal axis for GraphType CP_2D
 void CP2D_RenderHorizontalAxis(RenderContext* ctx, int x_length) {
     SDL_RenderLine(ctx->renderer, MARGIN, SDL_GetAtomicInt(&ctx->h) - MARGIN, SDL_GetAtomicInt(&ctx->w) - MARGIN, SDL_GetAtomicInt(&ctx->h) - MARGIN);
@@ -33,6 +39,10 @@ void CP2D_RenderHorizontalAxis(RenderContext* ctx, int x_length) {
     for (int i = 0; i < x_length; i++) {
         SDL_RenderLine(ctx->renderer, Graph2Window_X(i * x_spacing), Graph2Window_Y(ctx, -5), Graph2Window_X(i * x_spacing), Graph2Window_Y(ctx, 5));
     }
+}
+
+void CP2D_RenderVerticalAxis(RenderContext* ctx, int y_length) {
+    return;
 }
 
 // All plotting is done here
@@ -85,6 +95,8 @@ int RenderingThread(void* data) {
     }
     return 0;
 }
+
+/// Main SDL Thread /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Initializes the SDL_Window with esc->quit and update loop. Takes window name, width, and height
 int CP_InitSDL(char* plot_name, int plot_width, int plot_height, GraphType gt) {
