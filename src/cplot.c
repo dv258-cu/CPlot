@@ -65,9 +65,11 @@ int RenderingThread(void* data) {
                 break;
             }
             case CP_3D: { 
+                // Will include projection matrices and more complex math for graphing in 3D
                 break;
             }
             case CP_HEATMAP_2D: {
+                // Will include background texture and allow heatmap style data visualization for specific background images
                 break;
             }
             
@@ -89,22 +91,21 @@ int CP_InitSDL(char* plot_name, int plot_width, int plot_height, GraphType gt) {
     if (!SDL_Init(SDL_INIT_VIDEO)) return 1;
     if (!TTF_Init())               return 1;
 
-    // Use malloc so this persists for the thread!
+    // Use malloc so this persists for the thread
     RenderContext* ctx = malloc(sizeof(RenderContext));
     if (!ctx) return 1;
 
+    // Set window parameters to RenderContext ptr
     SDL_SetAtomicInt(&ctx->w, plot_width);
     SDL_SetAtomicInt(&ctx->h, plot_height);
     ctx->title = plot_name;
     ctx->gt = gt;
 
-    // Fix: Match the prototype in cpfunc.h
+    // Match the prototype in cpfunc.h
     CP_InitFunc(ctx);
 
-    
-
     if (!SDL_CreateWindowAndRenderer(plot_name, SDL_GetAtomicInt(&ctx->w), SDL_GetAtomicInt(&ctx->h), SDL_WINDOW_BORDERLESS, &ctx->window, &ctx->renderer)) {
-        free(ctx);
+        free(ctx); // Free the RenderContext in case of a crash
         return 1;
     }
 
@@ -124,7 +125,7 @@ int CP_InitSDL(char* plot_name, int plot_width, int plot_height, GraphType gt) {
     }
 
     
-    // Fully close and quit threads, renderer, window, and SDL3
+    // Fully close and quit threads, free RenderContext, quit and SDL3
     SDL_WaitThread(renderThread, NULL);
     SDL_DestroyRenderer(ctx->renderer);
     SDL_DestroyWindow(ctx->window);

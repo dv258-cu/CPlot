@@ -24,7 +24,7 @@ typedef struct {
     GraphType gt;
 } RenderContext;
 
-// Pass 'count' (number of elements) instead of byte size
+// Pass number of elements instead of byte size
 void CP_InitFunc(RenderContext* ctx);
 void CP_SetLinearFunction(RenderContext* ctx, float* x, size_t count, float m, float b);
 
